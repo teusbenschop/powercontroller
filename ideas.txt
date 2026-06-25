@@ -1,0 +1,47 @@
+
+Idee voor berekenen stroom. 
+* Zon verwachting ophalen. 
+* Stroomprijzen verwachting incl energiebelasting.
+* Historisch eigen gebruik. 
+* Accu capaciteit. 
+
+Scenario’s berekenen daarvoor met dag vooruit.
+Meest winstgevende scenario gaan draaien voor wanneer de accu’s op te laden. 
+
+
+Use constant current DC to DC converter to control inverter to feed into network.
+
+
+Dit is project ter voorbereiding op nieuw werk.
+De uren die erin worden gestoken kosten een veelvoud van de materiaalkosten. Twee uren op vrijdag. Als het alleen voor privégebruik is, dan zou het veel goedkoper zijn geweest gewoon een systeem te laten aanleggen.
+
+
+Meten welke zonkracht hoeveel kWh levert. Bij terugregeling door teveel stroom, toch af en toe even op 100% laten werken, om namelijk de huidige kWh te kunnen meten. Of apart paneel die altijd op volle kracht draait.
+Dus zelf lerend wat betreft opbrengst in verhouding tot zonkracht.
+Zonkracht van weerdiensten ophalen.
+
+Op basis van getraind model het verwachte verbruik voor de volgende dag berekenen. Kijken hoever accu opladen met bovenstaande factoren zodat er minimaal opgeladen wordt uit het net en zoveel mogelijk uit de zon. Bij kopen van stroom het in goedkope periode kopen.
+
+Energiemeter nodig die meet hoeveel stroom er opgewekt wordt dan wel in en uit de accu’s gaat, het volstaat met een enkele meter voor alles. Die dan uitlezen om betrouwbare data te krijgen voor het verbruik van het huis.
+
+Prediction of power used next day.
+If no model is available, then the prediction is the same as today.
+After a couple of days, train a model, and use that for predicition.
+After more days, retrain, and improve.
+Till one has a full year of data, or more even.
+
+Prediction of power obtained via solar panels.
+Depends on sun power.
+If no model is available, just charge batteries till full.
+If model is available, then charge batteries when power is cheap till how much is needed, from power from the grid.
+
+
+
+Model voor verbruik let ook op het weer als zon wind temperatuur etc
+
+
+Model berekent geschatte verbruik uit model
+en kijkt naar werkelijke verbruik afgelopen week
+en berekent gemiddelde error over die paar dagen
+en past die toe op schatting voor vandaag.
+(Als er nog niet voldoende data is, dan gaat het ook zo ongeveer: Kijken naar vorige paar dagen).
