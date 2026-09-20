@@ -7,33 +7,34 @@ namespace exception {
 
 class Base : public std::exception
 {
-    const std::string m_what;
+    std::string m_what{};
 public:
-    explicit Base(const std::string_view what) noexcept : m_what(what) { }
+    template<typename... Args>
+    explicit Base(Args&& ... args)
+    {
+        std::ostringstream oss;
+        (void(oss << std::forward<Args>(args) << ' '), ...);
+        m_what = std::move(oss).str();
+    }
     [[nodiscard]] const char* what() const noexcept final { return m_what.c_str(); }
 };
 
 namespace base {
 
-struct Datagram : Base { explicit Datagram(const std::string_view what) noexcept : Base(what) { } };
+struct Datagram : Base { using Base::Base; };
 
 namespace datagram {
+struct Header : Datagram { using Datagram::Datagram; };
+struct Footer : Datagram { using Datagram::Datagram; };
+struct Crc    : Datagram { using Datagram::Datagram; };
+}
 
-struct Header : Datagram { explicit Header(const std::string_view what) noexcept : Datagram(what) { } };
-struct Footer : Datagram { explicit Footer(const std::string_view what) noexcept : Datagram(what) { } };
-struct Crc    : Datagram { explicit Crc   (const std::string_view what) noexcept : Datagram(what) { } };
+struct Serial : Base { using Base::Base; };
 
 }
 
-}
-
-
-template<std::derived_from<Base> T, typename... Args>
-T create(Args&& ... args)
-{
-    std::ostringstream oss;
-    (void(oss << std::forward<Args>(args) << ' '), ...);
-    return T(std::move(oss).str());
-}
+// Quality checks: An inherited exception is not larger than the Base exception.
+static_assert(sizeof(base::Datagram) == sizeof(Base));
+static_assert(sizeof(base::datagram::Header) == sizeof(Base));
 
 }

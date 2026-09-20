@@ -50,7 +50,7 @@ TEST(dsmr, crc)
     {
         std::string invalid {datagram};
         char& c = invalid.at(invalid.find('!') + 1);
-        c++;
+        ++c;
         EXPECT_THROW(datagram::verify_crc(invalid), exception::base::datagram::Crc);
     }
 }

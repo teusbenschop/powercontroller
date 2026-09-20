@@ -2,6 +2,16 @@
 <project version="4">
   <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
+      <paths name="Ubuntu server (a940ad08-18c2-42f8-8b69-980500463179)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/powercontroller" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/build" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
       <paths name="[2a02:a444:1de1:0:ae87:a3ff:fe38:a281] (a0b86da9-ef41-4b4e-9088-b1dcaa668a69)">
         <serverdata>
           <mappings>

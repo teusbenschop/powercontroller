@@ -24,8 +24,20 @@ message(STATUS "Processing ${CMAKE_CURRENT_SOURCE_DIR}")
 
 
 # Start a project by setting the project name and version.
-project(powercontroller VERSION 0.1.000)
+project(powercontroller VERSION 0.1.0)
 message(STATUS "Power controller version ${powercontroller_VERSION}")
+
+
+# Windows / Mac / Unix
+if (WIN32)
+	message(FATAL_ERROR "Windows not supported")
+elseif (APPLE)
+	message(STATUS "Configuring for macOS")
+elseif (UNIX)
+	message(STATUS "Configuring for Linux")
+else()
+	message(FATAL_ERROR, "Running on unknown system")
+endif ()
 
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -74,6 +86,7 @@ add_library(library STATIC
         library.cpp
         dsmr/datagram.cpp
         exception.h
+        serial.cpp
 )
 
 
