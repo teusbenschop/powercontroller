@@ -56,9 +56,6 @@ option(CMAKE_INSTALL_PREFIX "Install prefix" "/usr")
 message(STATUS "Install prefix is ${CMAKE_INSTALL_PREFIX} (change: $cmake -DCMAKE_INSTALL_PREFIX=path)")
 # Set it during install: $ cmake --install . --prefix "/path"
 
-# Compiler to emit info for the debugger.
-add_compile_options( -g)
-
 # Enable compiler warnings.
 add_compile_options(-Wall -Wextra -Wpedantic -Wno-unknown-pragmas -Wno-pragmas -Wshadow -Warray-bounds -Wcast-align -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wdelete-non-virtual-dtor -Weffc++ -Wextra-semi -Wfloat-equal -Wformat=2 -Wmissing-include-dirs -Wmissing-noreturn -Wnull-dereference -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wsign-promo -Wsuggest-override -Wswitch-default -Wswitch-enum -Wundef -Wuninitialized -Wunused-but-set-parameter -Wunused-macros -Wunused-parameter -Wvla -Wzero-as-null-pointer-constant -Wmismatched-tags)
 if (COMPILER_GCC)
@@ -67,19 +64,16 @@ endif()
 if (COMPILER_CLANG)
 endif()
 
-# Compilers on some systems may treat warnings as errors.
-# Pass a flag to the compiler to treat a warning not as an error.
-add_compile_options(-fno-var-tracking -Wno-error)
+# Compiler emits info for the debugger.
+# Compiler treats a warning not as an error.
+add_compile_options(-fno-var-tracking -g -Wno-error)
 
-add_link_options(-Wall -lpthread -L. -g -rdynamic -ldl)
+add_link_options(-lpthread -rdynamic -ldl)
 
 # The C++ standard to use, and it is mandatory.
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
-# Finding and using libraries.
-find_package(PkgConfig REQUIRED)
-include(CheckIncludeFile)
 
 # Build the app's library, the kernel of the system.
 add_library(library STATIC
@@ -92,7 +86,7 @@ add_library(library STATIC
 
 # The service executable.
 add_executable(powercontrold main.cpp)
-target_link_libraries(powercontrold library)
+target_link_libraries(powercontrold PRIVATE library)
 
 
 # Unit testing
@@ -100,7 +94,6 @@ add_executable(unittest
         unittests/main.cpp
         unittests/dsmr.cpp
 )
-target_link_libraries(unittest library)
 
 
 # The include directories for all items
@@ -115,19 +108,19 @@ link_directories(build)
 find_package(PkgConfig REQUIRED)
 include(CheckIncludeFile)
 
+find_package(CURL 8.0.0 REQUIRED)
+find_package(GTest 1.10.0 REQUIRED)
 
-pkg_check_modules(LIBCURL REQUIRED libcurl>=7.20.0)
-target_include_directories(powercontrold PUBLIC ${LIBCURL_INCLUDE_DIRS})
-target_compile_options(powercontrold PUBLIC ${LIBCURL_CFLAGS_OTHER})
-target_link_directories(powercontrold PUBLIC ${LIBCURL_LIBRARY_DIRS})
-target_link_libraries(unittest ${LIBCURL_LIBRARIES})
+target_link_libraries(powercontrold PRIVATE
+	library
+	CURL::libcurl
+)
 
-
-pkg_check_modules(GTEST gtest>=1.10.0)
-target_include_directories(unittest PUBLIC ${GTEST_INCLUDE_DIRS})
-target_compile_options(unittest PUBLIC ${GTEST_CFLAGS_OTHER})
-target_link_directories(unittest PUBLIC ${GTEST_LIBRARY_DIRS})
-target_link_libraries(unittest ${GTEST_LIBRARIES})
+target_link_libraries(unittest PRIVATE
+	library
+	CURL::libcurl
+	GTest::gtest GTest::gtest_main
+)
 
 
 set(PACKAGE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/powercontroller")

@@ -45,3 +45,23 @@ en kijkt naar werkelijke verbruik afgelopen week
 en berekent gemiddelde error over die paar dagen
 en past die toe op schatting voor vandaag.
 (Als er nog niet voldoende data is, dan gaat het ook zo ongeveer: Kijken naar vorige paar dagen).
+
+
+Create internal watchdog.
+E.g. once connected to P1, it should hit the watchdog every second or so.
+If not hit, it no longer signals systemd, which should restart the system.
+
+
+May gather lots of data about usage and weather and so on,
+but may train smaller models suited to the situation, say,
+a model for summer, one for winter, in general, a model trained on a few months of data, centered around the current data.
+So it would switch models automatically, and train models automatically.
+
+
+Er is voorbeeld van C++ AI op GitHub,
+dat heeft geen GPU nodig om te trainen of inferentie te doen.
+Dit model aanpasssen en gebruiken.
+https://harald-scheidl.medium.com/a-simple-neural-network-written-in-plain-c-3cb420971abb
+Beter nog om std::valarray iets op te bouwen, wellicht via AI iets te vinden.
+
+Bij selecteren van de te trainen data, automatisch, moet er voldoende variatie zitten in de input, Dat is, voldonee variatie in het weer, en in stroomprijzen, etc.
